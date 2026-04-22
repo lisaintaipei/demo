@@ -13,13 +13,14 @@ export function ServiceCard({ title, description, image, link }: ServiceCardProp
       style={{
         width: '100%',
         display: 'flex',
+        flexDirection: 'column',
         border: '1px solid #E0E0E0',
         borderRadius: '12px',
         overflow: 'hidden',
-        backgroundColor: '#FFFFFF'
+        backgroundColor: '#FFFFFF',
       }}
     >
-      <div style={{ width: '50%' }}>
+      <div style={{ width: '100%', aspectRatio: '4 / 3', overflow: 'hidden' }}>
         <ImageWithFallback
           src={image}
           alt={title}
@@ -27,22 +28,29 @@ export function ServiceCard({ title, description, image, link }: ServiceCardProp
             width: '100%',
             height: '100%',
             objectFit: 'cover',
-            borderRadius: '12px 0 0 12px'
           }}
         />
       </div>
       <div
         style={{
-          width: '50%',
-          padding: '20px',
+          padding: '16px',
           display: 'flex',
           flexDirection: 'column',
-          justifyContent: 'center',
-          gap: '10px'
+          gap: '10px',
+          flex: 1,
         }}
       >
-        <h3 style={{ fontSize: '20px', color: '#000000', margin: 0, fontFamily: 'Arial, sans-serif' }}>{title}</h3>
-        <p style={{ fontSize: '14px', color: '#666666', margin: 0, lineHeight: '1.5', fontFamily: 'Arial, sans-serif' }}>
+        <h3 style={{ fontSize: '18px', color: '#000000', margin: 0, fontFamily: 'Arial, sans-serif' }}>{title}</h3>
+        <p
+          style={{
+            fontSize: '14px',
+            color: '#666666',
+            margin: 0,
+            lineHeight: '1.5',
+            fontFamily: 'Arial, sans-serif',
+            flex: 1,
+          }}
+        >
           {description}
         </p>
         <a
@@ -58,7 +66,7 @@ export function ServiceCard({ title, description, image, link }: ServiceCardProp
             textDecoration: 'none',
             fontSize: '14px',
             width: 'fit-content',
-            fontFamily: 'Arial, sans-serif'
+            fontFamily: 'Arial, sans-serif',
           }}
         >
           了解更多
