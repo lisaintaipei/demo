@@ -1,20 +1,42 @@
+import { useEffect, useState } from 'react';
 import { ServiceCard } from './ServiceCard';
 
+type Service = {
+  id: string | number;
+  title: string;
+  description: string;
+  image: string;
+  link?: string;
+};
+
 export function ServiceSection() {
-  const services = [
-    {
-      id: 1,
-      title: '專業諮詢服務',
-      description: '提供一對一的專業諮詢，幫助您解決各種商業挑戰，制定有效的策略方案。',
-      image: 'https://images.unsplash.com/photo-1774921676536-12e96b39238c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMHNlcnZpY2UlMjBkZXNrfGVufDF8fHx8MTc3Njg2Nzc2NXww&ixlib=rb-4.1.0&q=80&w=1080'
-    },
-    {
-      id: 2,
-      title: '企業培訓課程',
-      description: '量身定制的企業培訓計劃，提升團隊技能與工作效率，促進組織成長。',
-      image: 'https://images.unsplash.com/photo-1771979788419-84487b12e3a0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwyfHxidXNpbmVzcyUyMHNlcnZpY2UlMjBkZXNrfGVufDF8fHx8MTc3Njg2Nzc2NXww&ixlib=rb-4.1.0&q=80&w=1080'
-    }
-  ];
+  const [services, setServices] = useState<Service[]>([]);
+  const [status, setStatus] = useState<'loading' | 'ready' | 'error'>('loading');
+  const [errorMsg, setErrorMsg] = useState<string>('');
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch('/api/services')
+      .then(async (res) => {
+        const data = await res.json();
+        if (!res.ok) throw new Error(data?.error || `Request failed: ${res.status}`);
+        return data;
+      })
+      .then((data) => {
+        if (cancelled) return;
+        setServices(Array.isArray(data.services) ? data.services : []);
+        setStatus('ready');
+      })
+      .catch((err) => {
+        if (cancelled) return;
+        console.error('Failed to load services from Notion:', err);
+        setErrorMsg(err?.message || 'Unknown error');
+        setStatus('error');
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   return (
     <section
@@ -27,11 +49,36 @@ export function ServiceSection() {
       <h2 style={{ fontSize: '32px', color: '#000000', textAlign: 'center', marginBottom: '40px', fontFamily: 'Arial, sans-serif' }}>
         我的服務
       </h2>
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '30px', justifyContent: 'center' }}>
-        {services.map((service) => (
-          <ServiceCard key={service.id} {...service} />
-        ))}
-      </div>
+
+      {status === 'loading' && (
+        <p style={{ textAlign: 'center', color: '#666666', fontFamily: 'Arial, sans-serif' }}>載入中…</p>
+      )}
+
+      {status === 'error' && (
+        <p style={{ textAlign: 'center', color: '#B00020', fontFamily: 'Arial, sans-serif' }}>
+          無法從 Notion 載入服務內容：{errorMsg}
+        </p>
+      )}
+
+      {status === 'ready' && services.length === 0 && (
+        <p style={{ textAlign: 'center', color: '#666666', fontFamily: 'Arial, sans-serif' }}>
+          目前沒有服務項目。請在 Notion 資料庫中新增。
+        </p>
+      )}
+
+      {status === 'ready' && services.length > 0 && (
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '30px', justifyContent: 'center' }}>
+          {services.map((service) => (
+            <ServiceCard
+              key={service.id}
+              title={service.title}
+              description={service.description}
+              image={service.image}
+              link={service.link}
+            />
+          ))}
+        </div>
+      )}
     </section>
   );
 }

@@ -4,9 +4,10 @@ interface ServiceCardProps {
   title: string;
   description: string;
   image: string;
+  link?: string;
 }
 
-export function ServiceCard({ title, description, image }: ServiceCardProps) {
+export function ServiceCard({ title, description, image, link }: ServiceCardProps) {
   return (
     <div
       style={{
@@ -46,7 +47,9 @@ export function ServiceCard({ title, description, image }: ServiceCardProps) {
           {description}
         </p>
         <a
-          href="#"
+          href={link || '#'}
+          target={link ? '_blank' : undefined}
+          rel={link ? 'noopener noreferrer' : undefined}
           style={{
             backgroundColor: '#000000',
             color: '#FFFFFF',
