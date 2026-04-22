@@ -38,7 +38,8 @@ function figmaAssetResolver() {
   }
 }
 
-export default defineConfig({
+export default defineConfig(({ command }) => ({
+  base: command === 'build' ? '/demo/' : '/',
   plugins: [
     figmaAssetResolver(),
     notionApiPlugin(),
@@ -62,4 +63,4 @@ export default defineConfig({
     port: 5000,
     allowedHosts: true,
   },
-})
+}))

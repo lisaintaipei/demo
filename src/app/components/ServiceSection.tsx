@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { ServiceCard } from './ServiceCard';
+import bundledData from '../../data/services.json';
 
 type Service = {
   id: string | number;
@@ -9,29 +10,42 @@ type Service = {
   link?: string;
 };
 
+const initialServices: Service[] = Array.isArray((bundledData as any).services)
+  ? ((bundledData as any).services as Service[])
+  : [];
+
 export function ServiceSection() {
-  const [services, setServices] = useState<Service[]>([]);
-  const [status, setStatus] = useState<'loading' | 'ready' | 'error'>('loading');
+  const [services, setServices] = useState<Service[]>(initialServices);
+  const [status, setStatus] = useState<'loading' | 'ready' | 'error'>(
+    initialServices.length > 0 ? 'ready' : 'loading'
+  );
   const [errorMsg, setErrorMsg] = useState<string>('');
 
   useEffect(() => {
     let cancelled = false;
     fetch('/api/services')
       .then(async (res) => {
-        const data = await res.json();
-        if (!res.ok) throw new Error(data?.error || `Request failed: ${res.status}`);
-        return data;
+        const ct = res.headers.get('content-type') || '';
+        if (!res.ok || !ct.includes('application/json')) {
+          throw new Error(`No live API (status ${res.status})`);
+        }
+        return res.json();
       })
       .then((data) => {
         if (cancelled) return;
-        setServices(Array.isArray(data.services) ? data.services : []);
+        if (Array.isArray(data?.services)) {
+          setServices(data.services);
+        }
         setStatus('ready');
       })
-      .catch((err) => {
+      .catch(() => {
         if (cancelled) return;
-        console.error('Failed to load services from Notion:', err);
-        setErrorMsg(err?.message || 'Unknown error');
-        setStatus('error');
+        if (initialServices.length === 0) {
+          setErrorMsg('No services available.');
+          setStatus('error');
+        } else {
+          setStatus('ready');
+        }
       });
     return () => {
       cancelled = true;
@@ -43,10 +57,18 @@ export function ServiceSection() {
       id="service"
       style={{
         backgroundColor: '#FFFFFF',
-        padding: '60px 40px'
+        padding: '60px 40px',
       }}
     >
-      <h2 style={{ fontSize: '32px', color: '#000000', textAlign: 'center', marginBottom: '40px', fontFamily: 'Arial, sans-serif' }}>
+      <h2
+        style={{
+          fontSize: '32px',
+          color: '#000000',
+          textAlign: 'center',
+          marginBottom: '40px',
+          fontFamily: 'Arial, sans-serif',
+        }}
+      >
         我的服務
       </h2>
 
@@ -56,7 +78,7 @@ export function ServiceSection() {
 
       {status === 'error' && (
         <p style={{ textAlign: 'center', color: '#B00020', fontFamily: 'Arial, sans-serif' }}>
-          無法從 Notion 載入服務內容：{errorMsg}
+          無法載入服務內容：{errorMsg}
         </p>
       )}
 
