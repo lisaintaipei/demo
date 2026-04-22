@@ -2,8 +2,20 @@ import { Client } from '@notionhq/client';
 
 function extractDatabaseId(input: string): string {
   const trimmed = input.trim();
-  const match = trimmed.match(/[0-9a-f]{32}/i);
+  // If it looks like a URL, prefer the ID in the path (before the query string).
+  // The ?v=... part is a *view* ID, not the database ID.
+  try {
+    const url = new URL(trimmed);
+    const pathMatch = url.pathname.match(/[0-9a-f]{32}/i);
+    if (pathMatch) return pathMatch[0];
+  } catch {
+    // not a URL, fall through
+  }
+  const beforeQuery = trimmed.split('?')[0];
+  const match = beforeQuery.match(/[0-9a-f]{32}/i);
   if (match) return match[0];
+  const anyMatch = trimmed.match(/[0-9a-f]{32}/i);
+  if (anyMatch) return anyMatch[0];
   return trimmed.replace(/-/g, '');
 }
 
