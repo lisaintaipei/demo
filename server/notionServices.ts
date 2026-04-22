@@ -62,16 +62,25 @@ export async function fetchServices() {
 
   const notion = new Client({ auth: token });
 
+  const queryArgs: any = {
+    page_size: 50,
+    filter: {
+      property: 'Status',
+      status: { equals: 'Published' },
+    },
+    sorts: [{ timestamp: 'created_time', direction: 'ascending' }],
+  };
+
   let response: any;
   try {
     const db: any = await notion.databases.retrieve({ database_id: databaseId });
     const dataSourceId = db?.data_sources?.[0]?.id;
     if (!dataSourceId) throw new Error('No data source found on this Notion database.');
-    response = await (notion as any).dataSources.query({ data_source_id: dataSourceId, page_size: 50 });
+    response = await (notion as any).dataSources.query({ data_source_id: dataSourceId, ...queryArgs });
   } catch (e: any) {
     // Fall back to legacy databases.query for older Notion API versions
     if ((notion as any).databases?.query) {
-      response = await (notion as any).databases.query({ database_id: databaseId, page_size: 50 });
+      response = await (notion as any).databases.query({ database_id: databaseId, ...queryArgs });
     } else {
       throw e;
     }

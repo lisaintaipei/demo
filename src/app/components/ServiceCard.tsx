@@ -11,8 +11,7 @@ export function ServiceCard({ title, description, image, link }: ServiceCardProp
   return (
     <div
       style={{
-        width: '45%',
-        minWidth: '400px',
+        width: '100%',
         display: 'flex',
         border: '1px solid #E0E0E0',
         borderRadius: '12px',

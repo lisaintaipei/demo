@@ -67,7 +67,15 @@ export function ServiceSection() {
       )}
 
       {status === 'ready' && services.length > 0 && (
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '30px', justifyContent: 'center' }}>
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
+            gap: '30px',
+            maxWidth: '1200px',
+            margin: '0 auto',
+          }}
+        >
           {services.map((service) => (
             <ServiceCard
               key={service.id}
