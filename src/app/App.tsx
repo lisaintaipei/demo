@@ -1,4 +1,5 @@
 import { Facebook, Instagram, Youtube } from 'lucide-react';
+import { ServiceSection } from './components/ServiceSection';
 
 export default function App() {
   const scrollToSection = (id: string) => {
@@ -118,99 +119,8 @@ export default function App() {
         </div>
       </section>
 
-      {/* Service Section */}
-      <section id="service" style={{ backgroundColor: '#FFFFFF', padding: '60px 40px' }}>
-        <h2 style={{ fontSize: '32px', textAlign: 'center', color: '#000000', marginBottom: '40px' }}>我的服務</h2>
-        
-        <div style={{ 
-          display: 'flex', 
-          flexWrap: 'wrap', 
-          gap: '40px', 
-          maxWidth: '1200px', 
-          margin: '0 auto',
-          justifyContent: 'center'
-        }}>
-          {/* Service Card 1 */}
-          <div style={{ 
-            width: '45%', 
-            display: 'flex', 
-            border: '1px solid #e0e0e0',
-            borderRadius: '10px',
-            overflow: 'hidden',
-            minWidth: '400px'
-          }}>
-            <img 
-              src="https://images.unsplash.com/photo-1765020553734-2c050ddb9494?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMGNvbnN1bHRhdGlvbiUyMG1lZXRpbmd8ZW58MXx8fHwxNzc2ODY5MzEzfDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
-              alt="服務 1"
-              style={{ 
-                width: '50%', 
-                objectFit: 'cover',
-                borderRadius: '10px 0 0 10px'
-              }}
-            />
-            <div style={{ width: '50%', padding: '20px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
-              <h3 style={{ margin: 0, fontSize: '20px' }}>商業諮詢服務</h3>
-              <p style={{ margin: 0, color: '#666666', fontSize: '14px' }}>
-                提供專業的商業策略諮詢，協助企業成長與轉型，打造更具競爭力的商業模式。
-              </p>
-              <a 
-                href="#"
-                style={{
-                  backgroundColor: '#000000',
-                  color: '#FFFFFF',
-                  padding: '10px',
-                  borderRadius: '5px',
-                  textDecoration: 'none',
-                  textAlign: 'center',
-                  marginTop: 'auto'
-                }}
-              >
-                了解更多
-              </a>
-            </div>
-          </div>
-
-          {/* Service Card 2 */}
-          <div style={{ 
-            width: '45%', 
-            display: 'flex', 
-            border: '1px solid #e0e0e0',
-            borderRadius: '10px',
-            overflow: 'hidden',
-            minWidth: '400px'
-          }}>
-            <img 
-              src="https://images.unsplash.com/photo-1632937145991-91620be68319?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjcmVhdGl2ZSUyMGRlc2lnbiUyMHdvcmtzcGFjZXxlbnwxfHx8fDE3NzY4NTkwMTl8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
-              alt="服務 2"
-              style={{ 
-                width: '50%', 
-                objectFit: 'cover',
-                borderRadius: '10px 0 0 10px'
-              }}
-            />
-            <div style={{ width: '50%', padding: '20px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
-              <h3 style={{ margin: 0, fontSize: '20px' }}>創意設計顧問</h3>
-              <p style={{ margin: 0, color: '#666666', fontSize: '14px' }}>
-                整合創意思維與設計美學，為您的品牌打造獨特的視覺識別與使用者體驗。
-              </p>
-              <a 
-                href="#"
-                style={{
-                  backgroundColor: '#000000',
-                  color: '#FFFFFF',
-                  padding: '10px',
-                  borderRadius: '5px',
-                  textDecoration: 'none',
-                  textAlign: 'center',
-                  marginTop: 'auto'
-                }}
-              >
-                了解更多
-              </a>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* Service Section (loaded live from Notion) */}
+      <ServiceSection />
 
       {/* Contact Section */}
       <section id="contact" style={{ backgroundColor: '#FFFFFF', padding: '60px 40px' }}>
